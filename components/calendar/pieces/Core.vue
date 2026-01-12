@@ -3,12 +3,17 @@ import { currentSchedule, currentSessions } from '../../../composables/useSchedu
 
 import Session from './Session.vue';
 import HourLines from './HourLines.vue';
+import DayOfWeekHeader from './DayOfWeekHeader.vue';
 
 const selectedSectionCrn = ref("");
+
+const headerHeight = "3em";
 </script>
 
 <template>
-  <div class="calendar-core">
+  <DayOfWeekHeader :height="headerHeight" />
+
+  <div class="calendar-core" :style="{'height': -headerHeight}">
     <HourLines />
     <Session
       v-for="session in currentSessions"
@@ -24,6 +29,7 @@ const selectedSectionCrn = ref("");
 
 <style scoped>
   .calendar-core {
+    position: relative;
     height: 100%;
   }
 </style>
