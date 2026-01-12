@@ -1,8 +1,8 @@
 <script setup>
-import { currentSchedule, currentSessions } from '../../composables/useSchedules';
-import { dayStartHour, dayEndHour } from '../../composables/dayLimits';
+import { currentSchedule, currentSessions } from '../../../composables/useSchedules';
+import { dayStartHour, dayEndHour } from '../../../composables/dayLimits';
 
-import Session from './pieces/Session.vue';
+import Session from './Session.vue';
 
 const selectedSectionCrn = ref("");
 

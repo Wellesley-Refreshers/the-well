@@ -1,6 +1,6 @@
 <template>
   <div class="calendar-container">
-    <Calendar />
+    <CalendarPiecesCore />
   </div>
   <ScheduleChanger />
 </template>
