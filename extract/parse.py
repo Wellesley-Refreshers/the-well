@@ -1,5 +1,6 @@
 import json
 import re
+from collections import OrderedDict
 from datetime import datetime, time
 from pathlib import Path
 from typing import Any, Callable
@@ -104,7 +105,7 @@ def parse_professors(course_container: BeautifulSoup) -> list[str]:
         list[str]: The professor(s) of that course.
     """
     professor_elements = course_container.select("a.professorname")
-    return [professor_element.text for professor_element in professor_elements]
+    return [professor_element.text.strip() for professor_element in professor_elements]
 
 
 def parse_description(course_container: BeautifulSoup) -> str:
@@ -124,7 +125,7 @@ def parse_description(course_container: BeautifulSoup) -> str:
             f"Expected to find 1 description container, but found {len(desc_elements)}: {desc_elements}"
         )
 
-    return desc_elements[0].text
+    return desc_elements[0].text.strip()
 
 
 def parse_enrollment_data(course_container: BeautifulSoup) -> tuple[int, float, int, int, int]:
@@ -217,7 +218,7 @@ def parse_meetings(course_container: BeautifulSoup) -> list[Meeting]:
                 f"Expected location element to be an <a> tag, but was actually {location_element.name}!"
             )
 
-        return location_element.text
+        return location_element.text.strip()
 
     # We need to manually scan the contents array.
     # It should go (str w/ meeting times, loc, str w/ meeting times, loc, ...)
@@ -292,7 +293,7 @@ def parse_prerequisites(course_container: BeautifulSoup) -> str:
         return ""
 
     regex = r"Prerequisites\(s\): (.*)"
-    return re.search(regex, prerequisites_element.text).group(1)
+    return re.search(regex, prerequisites_element.text).group(1).strip()
 
 
 def parse_crosslisted(course_container: BeautifulSoup) -> str:
@@ -403,10 +404,11 @@ def main() -> None:
         course_browser_dom = BeautifulSoup(file, features="lxml")
 
     course_sections = parse_course_browser(course_browser_dom)
+    course_sections.sort(key=lambda section: section.crn)
 
-    course_sections_by_crn = {
-        course_section.crn: course_section.model_dump() for course_section in course_sections
-    }
+    course_sections_by_crn = OrderedDict(
+        [(section.crn, section.model_dump()) for section in course_sections]
+    )
 
     def default_serializer(to_serialize: Any):
         if isinstance(to_serialize, time):
@@ -415,6 +417,7 @@ def main() -> None:
     with OUT_FP.open("w") as out_file:
         json.dump(course_sections_by_crn, out_file, default=default_serializer)
 
+    PERMANENT_FP.unlink(missing_ok=True)  # need to unlink first, if the symlink already exists
     PERMANENT_FP.symlink_to(OUT_FP)
 
 
