@@ -1,11 +1,11 @@
+import json
 import re
 from datetime import datetime, time
 from pathlib import Path
 from typing import Any, Callable
 
 from bs4 import BeautifulSoup
-
-from models import CourseSection, CourseSections, Meeting, MeetingTime
+from models import CourseSection, Meeting, MeetingTime
 
 
 def find(f: Callable, lst: list[Any]) -> Any | None:
@@ -181,9 +181,9 @@ def parse_meetings(course_container: BeautifulSoup) -> list[Meeting]:
 
         day_of_week_regex = r"[MTWRF]+"
         time_regex = r"\d+:\d+ [AP]M"
-        regex = rf".*({day_of_week_regex}) - ({time_regex}) - ({time_regex}).*"
+        regex = rf"({day_of_week_regex}) - ({time_regex}) - ({time_regex})"
 
-        match = re.match(regex, meeting_time_str)
+        match = re.search(regex, meeting_time_str)
 
         def get_time(time_match) -> time:
             time_format = "%I:%M %p"
@@ -393,18 +393,29 @@ def parse_course_browser(course_browser_dom: BeautifulSoup) -> list[CourseSectio
 
 
 def main() -> None:
-    IN_FP = Path.cwd() / "data" / "raw" / "sp26.html"
-    OUT_FP = Path.cwd() / "data" / "parsed" / "sp26.json"
+    semester = "sp26"
+
+    IN_FP = Path.cwd() / "data" / "raw" / f"{semester}.html"
+    OUT_FP = Path.cwd() / "data" / "parsed" / f"{semester}.json"
+    PERMANENT_FP = Path.cwd() / "data" / "parsed" / "currentCourses.json"
 
     with IN_FP.open() as file:
         course_browser_dom = BeautifulSoup(file, features="lxml")
 
     course_sections = parse_course_browser(course_browser_dom)
 
-    course_sections = CourseSections(course_sections)
+    course_sections_by_crn = {
+        course_section.crn: course_section.model_dump() for course_section in course_sections
+    }
 
-    with OUT_FP.open("w") as out_json:
-        out_json.write(course_sections.model_dump_json())
+    def default_serializer(to_serialize: Any):
+        if isinstance(to_serialize, time):
+            return to_serialize.strftime("%H:%M:%S")
+
+    with OUT_FP.open("w") as out_file:
+        json.dump(course_sections_by_crn, out_file, default=default_serializer)
+
+    PERMANENT_FP.symlink_to(OUT_FP)
 
 
 if __name__ == "__main__":
