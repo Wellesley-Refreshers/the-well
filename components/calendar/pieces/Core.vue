@@ -8,7 +8,7 @@ const selectedSectionCrn = ref("");
 </script>
 
 <template>
-  <div class="calendar">
+  <div class="calendar-core">
     <HourLines />
     <Session
       v-for="session in currentSessions"
@@ -21,3 +21,9 @@ const selectedSectionCrn = ref("");
     />
   </div>
 </template>
+
+<style scoped>
+  .calendar-core {
+    height: 100%;
+  }
+</style>

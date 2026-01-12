@@ -1,19 +1,16 @@
 <template>
   <div class="calendar-container">
-    <CalendarPiecesCore />
+    <Calendar />
   </div>
   <ScheduleChanger />
 </template>
 
 <style scoped>
-  .calendar {
+  .calendar-container {
     position: absolute;
-    top: 10vh;
-    left: 10vw;
-    width: 80vw;
-    height: 80vh;
-
-    /* width: 500px; */
-    /* height: 20px; */
+    top: 5em;
+    left: 5em;
+    width: 50em;
+    height: 50em;
   }
 </style>
