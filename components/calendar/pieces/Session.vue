@@ -35,11 +35,6 @@ function getMinutesSinceStartOfDay(day) {
   return 60 * day.getHours() + day.getMinutes();
 }
 
-function getRelativeMinutes(timeString) {
-  let day = new Date(`1970-01-05T${timeString}`);
-  return getMinutesSinceStartOfDay(day);
-}
-
 function offsetByDayOfWeek(dayOfWeek) {
   switch(dayOfWeek) {
     case "M":
@@ -69,18 +64,18 @@ let overlapShift = computed(() => {
   return thisSessionIndex * (1 / overlappingSessions.value.length);
 });
 
-let outerStyle = {
-  "position": "absolute",
-  "top": `${100 * fracPerMinute * startMinute}%`,
-  "left": `${(offsetByDayOfWeek(props.session.dayOfWeek) + overlapShift.value * dayWidth) * 100}%`,
-  "width": `${(dayWidth * 100) / overlappingSessions.value.length}%`,
-  "height": `${(duration / totalMinute) * 100}%`
-}
+let outerStyle = computed(() => {
+  return {
+    "top": `${100 * fracPerMinute * startMinute}%`,
+    "left": `${(offsetByDayOfWeek(props.session.dayOfWeek) + overlapShift.value * dayWidth) * 100}%`,
+    "width": `${(dayWidth * 100) / overlappingSessions.value.length}%`,
+    "height": `${(duration / totalMinute) * 100}%`
+  }
+});
 
-let innerStyle = {
-  "background-color": props.color,
-  "height": "100%",
-}
+let innerStyle = computed(() => {
+  return {"background-color": props.color, "height": "100%"};
+});
 
 let section = allCourseSections[props.session.crn];
 let course = `${section.dept} ${section.course_no} - ${section.section_no}`;
@@ -107,6 +102,10 @@ let course = `${section.dept} ${section.course_no} - ${section.section_no}`;
 <style scoped>
   .class-block {
     border-radius: 1em;
+  }
+
+  .class-block-outer {
+    position: absolute;
   }
 
   .class-block-text {
