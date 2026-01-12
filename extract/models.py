@@ -28,7 +28,6 @@ class Meeting(Model):
 
 
 class Course(BaseModel):
-    crn: int
     dept: str
     course_no: str
 
@@ -41,6 +40,7 @@ class Course(BaseModel):
 
 
 class CourseSection(Course):
+    crn: int
     section_no: str
 
     professors: list[str]
