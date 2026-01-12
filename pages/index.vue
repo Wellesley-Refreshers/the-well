@@ -3,6 +3,7 @@
     <Calendar />
   </div>
   <ScheduleChanger />
+  <Search />
 </template>
 
 <style scoped>
