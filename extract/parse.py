@@ -358,7 +358,7 @@ def parse_course_section(course_container: BeautifulSoup) -> CourseSection:
     crn, credit, curr_enroll, available_seats, max_enroll = parse_enrollment_data(course_container)
 
     return CourseSection(
-        crn=crn,
+        crn=f"CRN:{crn}",  # appending "CRN:" prefix forces JS to treat this as a string
         dept=dept,
         course_no=course_no,
         section_no=section_no,

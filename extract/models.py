@@ -40,7 +40,7 @@ class Course(BaseModel):
 
 
 class CourseSection(Course):
-    crn: int
+    crn: str
     section_no: str
 
     professors: list[str]
