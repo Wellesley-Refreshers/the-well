@@ -1,3 +1,13 @@
 :root {
-  --main-color: rgb(13, 13, 183);
+  --main-color: #041562;
+  --secondary-color: #11468F;
+  --tertiary-color: #DA1212;
+
+  --background-color: #EEEEEE;
+  --background-color-lighter: #f0f0f0;
+  --background-color-darker: #e0e0e0;
+}
+
+body {
+  background-color: var(--background-color);
 }

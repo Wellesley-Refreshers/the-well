@@ -40,7 +40,7 @@
   }
 
   .result-container:hover {
-    background-color: rgb(229, 229, 229);
+    background-color: var(--background-color-darker);
     cursor: pointer;
   }
 
