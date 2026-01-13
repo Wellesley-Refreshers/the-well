@@ -12,7 +12,7 @@
 
 <template>
   <div class="result-container" @click="addClass(props.crn)">
-    <h3>{{ `${section.dept} ${section.course_no}` }} <span style="font-weight: 400">{{ section.section_no }}</span></h3>
+    <h3 class="coursecode">{{ `${section.dept} ${section.course_no}` }} <span class="section-no">{{ section.section_no }}</span></h3>
     <h4>{{ section.title }}</h4>
   </div>
 </template>
@@ -23,7 +23,11 @@
   }
 
   .result-container:hover {
-    background-color: gray;
+    background-color: rgb(229, 229, 229);
     cursor: pointer;
+  }
+
+  .section-no {
+    font-weight: 400;
   }
 </style>

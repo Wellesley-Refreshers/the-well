@@ -23,7 +23,7 @@ function toggleSchedulesMenu() {
   </div>
 
   <div v-if="showSchedules">
-    <button v-for="scheduleName in Object.keys(schedules)" @click="switchToSchedule(scheduleName); toggleSchedulesMenu()" >{{ scheduleName }}</button>
+    <button v-for="[i, schedule] in schedules.entries()" @click="switchToSchedule(i); toggleSchedulesMenu()" >{{ schedule.name }}</button>
   </div>
 </template>
 

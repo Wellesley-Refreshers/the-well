@@ -1,5 +1,5 @@
 <script setup>
-import { currentSchedule, currentSessions } from '../../../composables/useSchedules';
+import { currentCrnColors, currentSessions } from '../../../composables/useSchedules';
 
 import Session from './Session.vue';
 import HourLines from './HourLines.vue';
@@ -20,7 +20,7 @@ const headerHeight = "3em";
       :key="session.crn"
       :session="session"
       :selected-section-crn="selectedSectionCrn"
-      :color="currentSchedule[session.crn]"
+      :color="currentCrnColors[session.crn]"
       @becomeHovered="(event) => {selectedSectionCrn = session.crn}"
       @becomeUnhovered="(event) => {selectedSectionCrn = ''}"
     />

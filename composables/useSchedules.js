@@ -4,17 +4,20 @@ import allCourseSections from "../data/parsed/currentCourses.json";
 const isInitialized = ref(false);
 
 // Saved in local storage
-export const currentScheduleName = ref("");
-export const schedules = ref({});
-export const currentSchedule = computed(
-  () => schedules.value[currentScheduleName.value]
+export const currentScheduleIndex = ref(0);
+export const schedules = ref([]);
+export const currentScheduleName = computed(
+  () => schedules.value[currentScheduleIndex.value].name
+);
+export const currentCrnColors = computed(
+  () => schedules.value[currentScheduleIndex.value].crnColors
 );
 export const currentSessions = computed(() =>
-  getAllSessions(currentSchedule.value)
+  getAllSessions(currentCrnColors.value)
 );
 
 // Keys to save the above in local storage
-const CURR_SCHEDULE_KEY = "currentSchedule";
+const CURR_SCHEDULE_KEY = "currentScheduleIndex";
 const SCHEDULES_KEY = "schedules";
 
 // Okabe-Ito
@@ -28,6 +31,10 @@ const PALETTE = [
   "#CC79A7",
 ];
 
+//
+// HELPERS
+//
+
 function getMinutesSinceStartOfDay(day) {
   return 60 * day.getHours() + day.getMinutes();
 }
@@ -38,17 +45,24 @@ function getRelativeMinutes(timeString) {
 }
 
 function selectRandomColor() {
-  const usedColors = Object.values(schedules.value[currentScheduleName.value]);
+  const usedColors = Object.values(currentCrnColors.value);
 
   const availableColors = PALETTE.filter((color) => !(color in usedColors));
 
   return availableColors[Math.floor(Math.random() * availableColors.length)];
 }
 
-const getAllSessions = (schedule) => {
+function getDefaultScheduleName() {
+  // Get current number of schedules so we can automatically give
+  // the new schedule the name "Schedule x"
+  const currentScheduleNum = Object.keys(schedules.value).length;
+  return `Schedule ${currentScheduleNum + 1}`;
+}
+
+const getAllSessions = (crnColors) => {
   let allSessions = [];
 
-  for (const crn of Object.keys(schedule)) {
+  for (const crn of Object.keys(crnColors)) {
     const section = allCourseSections[crn];
     for (const meeting of section.meetings) {
       const meetingTime = meeting.meeting_time;
@@ -64,32 +78,36 @@ const getAllSessions = (schedule) => {
   return allSessions;
 };
 
+//
+// SAVING
+//
+
 const saveSchedules = () => {
   if (import.meta.client) {
     const schedulesStringified = JSON.stringify(schedules.value);
+    console.log(schedulesStringified);
     localStorage.setItem(SCHEDULES_KEY, schedulesStringified);
   }
 };
 
-const saveCurrentSchedule = () => {
+const saveCurrentScheduleIndex = () => {
   if (import.meta.client) {
-    localStorage.setItem(CURR_SCHEDULE_KEY, currentScheduleName.value);
+    localStorage.setItem(CURR_SCHEDULE_KEY, currentScheduleIndex.value);
   }
 };
 
-const getDefaultScheduleName = () => {
-  // Get current number of schedules so we can automatically give
-  // the new schedule the name "Schedule x"
-  const currentScheduleNum = Object.keys(schedules.value).length;
-  return `Schedule ${currentScheduleNum + 1}`;
-};
+//
+// SCHEDULES
+//
 
 export const makeNewSchedule = () => {
-  const newScheduleName = getDefaultScheduleName();
-  schedules.value[newScheduleName] = {};
+  schedules.value.push({
+    name: getDefaultScheduleName(),
+    crnColors: {},
+  });
 
   saveSchedules();
-  switchToSchedule(newScheduleName);
+  switchToSchedule(schedules.value.length - 1);
 };
 
 export const renameSchedule = (scheduleName, newName) => {
@@ -112,25 +130,29 @@ export const removeSchedule = () => {
     return;
   }
 
-  delete schedules.value[currentScheduleName.value];
-  currentScheduleName.value = Object.keys(schedules.value)[0];
+  schedules.value.splice(currentScheduleIndex.value, 1);
+  currentScheduleIndex.value -= 1; // NOTE: we've already insured index > 0
 
-  saveCurrentSchedule();
+  saveCurrentScheduleIndex();
   saveSchedules();
 };
 
-export const switchToSchedule = (scheduleName) => {
-  currentScheduleName.value = scheduleName;
-  saveCurrentSchedule();
+export const switchToSchedule = (scheduleIndex) => {
+  currentScheduleIndex.value = scheduleIndex;
+  saveCurrentScheduleIndex();
 };
 
+//
+// CLASSES
+//
+
 export const addClass = (classCrn) => {
-  if (Object.keys(currentSchedule.value).includes(classCrn)) {
+  if (Object.keys(currentCrnColors.value).includes(classCrn)) {
     return;
   }
 
   const color = selectRandomColor();
-  schedules.value[currentScheduleName.value][classCrn] = color;
+  currentCrnColors.value[classCrn] = color;
 
   saveSchedules();
 };
@@ -140,9 +162,13 @@ export const removeClass = (classCrn) => {
   //   return;
   // }
 
-  delete schedules.value[currentScheduleName.value][classCrn];
+  delete currentCrnColors.value[classCrn];
   saveSchedules();
 };
+
+//
+// MAIN
+//
 
 const initializeFromStorage = () => {
   if (import.meta.client && !isInitialized.value) {
@@ -152,7 +178,7 @@ const initializeFromStorage = () => {
     if (currentScheduleSaved === null || schedulesSaved === null) {
       makeNewSchedule();
     } else {
-      currentScheduleName.value = currentScheduleSaved;
+      currentScheduleIndex.value = currentScheduleSaved;
       schedules.value = JSON.parse(schedulesSaved);
     }
 
@@ -160,9 +186,4 @@ const initializeFromStorage = () => {
   }
 };
 
-// Initialize immediately when module is imported on client
-if (import.meta.client) {
-  initializeFromStorage();
-}
-
-// export { schedules, currentSchedule, currentScheduleName, currentSessions };
+initializeFromStorage();
