@@ -4,14 +4,21 @@ import allCourseSections from "../data/parsed/currentCourses.json";
 const isInitialized = ref(false);
 
 // Saved in local storage
-const currentScheduleName = ref("");
-const schedules = ref({});
+export const currentScheduleName = ref("");
+export const schedules = ref({});
+export const currentSchedule = computed(
+  () => schedules.value[currentScheduleName.value]
+);
+export const currentSessions = computed(() =>
+  getAllSessions(currentSchedule.value)
+);
 
+// Keys to save the above in local storage
 const CURR_SCHEDULE_KEY = "currentSchedule";
 const SCHEDULES_KEY = "schedules";
 
 // Okabe-Ito
-const palette = [
+const PALETTE = [
   "#E69F00",
   "#56B4E9",
   "#009E73",
@@ -28,6 +35,14 @@ function getMinutesSinceStartOfDay(day) {
 function getRelativeMinutes(timeString) {
   let day = new Date(`1970-01-05T${timeString}`);
   return getMinutesSinceStartOfDay(day);
+}
+
+function selectRandomColor() {
+  const usedColors = Object.values(schedules.value[currentScheduleName.value]);
+
+  const availableColors = PALETTE.filter((color) => !(color in usedColors));
+
+  return availableColors[Math.floor(Math.random() * availableColors.length)];
 }
 
 const getAllSessions = (schedule) => {
@@ -49,37 +64,6 @@ const getAllSessions = (schedule) => {
   return allSessions;
 };
 
-const initializeFromStorage = () => {
-  if (import.meta.client && !isInitialized.value) {
-    const currentScheduleSaved = localStorage.getItem(CURR_SCHEDULE_KEY);
-    if (currentScheduleSaved !== null) {
-      currentScheduleName.value = currentScheduleSaved;
-    } else {
-      currentScheduleName.value = "Schedule 1";
-    }
-
-    const schedulesSaved = localStorage.getItem(SCHEDULES_KEY);
-    if (schedulesSaved !== null) {
-      schedules.value = JSON.parse(schedulesSaved);
-    } else {
-      schedules.value = { "Schedule 1": [] };
-    }
-
-    isInitialized.value = true;
-
-    // TODO: remove (testing)
-    currentScheduleName.value = "Schedule 1";
-    schedules.value = {
-      "Schedule 1": {
-        20803: "#555555",
-        20001: "#ff7520",
-        20912: "#444777",
-        20018: "#7ddddd",
-      },
-    };
-  }
-};
-
 const saveSchedules = () => {
   if (import.meta.client) {
     const schedulesStringified = JSON.stringify(schedules.value);
@@ -93,31 +77,19 @@ const saveCurrentSchedule = () => {
   }
 };
 
-// Initialize immediately when module is imported on client
-if (import.meta.client) {
-  initializeFromStorage();
-}
-
-// Kept for convenience
-const currentSchedule = computed(
-  () => schedules.value[currentScheduleName.value]
-);
-const currentSessions = computed(() => getAllSessions(currentSchedule.value));
-
-export { schedules, currentSchedule, currentScheduleName, currentSessions };
-
-export const makeNewSchedule = () => {
+const getDefaultScheduleName = () => {
   // Get current number of schedules so we can automatically give
   // the new schedule the name "Schedule x"
   const currentScheduleNum = Object.keys(schedules.value).length;
-  console.log(currentScheduleNum);
+  return `Schedule ${currentScheduleNum + 1}`;
+};
 
-  const newScheduleName = `Schedule ${currentScheduleNum + 1}`;
-  schedules.value[newScheduleName] = [];
-
-  switchToSchedule(newScheduleName);
+export const makeNewSchedule = () => {
+  const newScheduleName = getDefaultScheduleName();
+  schedules.value[newScheduleName] = {};
 
   saveSchedules();
+  switchToSchedule(newScheduleName);
 };
 
 export const renameSchedule = (scheduleName, newName) => {
@@ -143,6 +115,7 @@ export const removeSchedule = () => {
   delete schedules.value[currentScheduleName.value];
   currentScheduleName.value = Object.keys(schedules.value)[0];
 
+  saveCurrentSchedule();
   saveSchedules();
 };
 
@@ -151,18 +124,45 @@ export const switchToSchedule = (scheduleName) => {
   saveCurrentSchedule();
 };
 
-export const addNewClass = (classCrn) => {
-  const usedColors = Object.values(schedules.value[currentScheduleName.value]);
+export const addClass = (classCrn) => {
+  if (Object.keys(currentSchedule.value).includes(classCrn)) {
+    return;
+  }
 
-  const availableColors = palette.filter((color) => !(color in usedColors));
-
-  const color =
-    availableColors[Math.floor(Math.random() * availableColors.length)];
-
+  const color = selectRandomColor();
   schedules.value[currentScheduleName.value][classCrn] = color;
+
+  saveSchedules();
 };
 
 export const removeClass = (classCrn) => {
+  // if (!(classCrn in Object.keys(currentSchedule))) {
+  //   return;
+  // }
+
   delete schedules.value[currentScheduleName.value][classCrn];
   saveSchedules();
 };
+
+const initializeFromStorage = () => {
+  if (import.meta.client && !isInitialized.value) {
+    const currentScheduleSaved = localStorage.getItem(CURR_SCHEDULE_KEY);
+    const schedulesSaved = localStorage.getItem(SCHEDULES_KEY);
+
+    if (currentScheduleSaved === null || schedulesSaved === null) {
+      makeNewSchedule();
+    } else {
+      currentScheduleName.value = currentScheduleSaved;
+      schedules.value = JSON.parse(schedulesSaved);
+    }
+
+    isInitialized.value = true;
+  }
+};
+
+// Initialize immediately when module is imported on client
+if (import.meta.client) {
+  initializeFromStorage();
+}
+
+// export { schedules, currentSchedule, currentScheduleName, currentSessions };

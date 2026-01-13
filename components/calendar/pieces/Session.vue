@@ -31,10 +31,6 @@ const overlappingSessions = computed(() => {
   return overlappingSessions;
 });
 
-function getMinutesSinceStartOfDay(day) {
-  return 60 * day.getHours() + day.getMinutes();
-}
-
 function offsetByDayOfWeek(dayOfWeek) {
   switch(dayOfWeek) {
     case "M":
@@ -90,7 +86,7 @@ let course = `${section.dept} ${section.course_no} - ${section.section_no}`;
       :style="innerStyle"
       @mouseover="(event) => $emit('becomeHovered', event)"
       @mouseleave="(event) => $emit('becomeUnhovered', event)"
-      @click="(event) => {removeClass(section.crn); $emit('removeClass', event)}"
+      @click="(event) => {removeClass(section.crn)}"
     >
       <div class="class-block-text">
         <h3>{{ course }}</h3>

@@ -16,12 +16,21 @@
     }
   })
 
+  // constant for all courses as Fuse results, when query == "".
+  const allCourseResults = coursesSearchable.map((courseSearchable, index) => {
+    return {
+      item: courseSearchable,
+      refIndex: index,
+      score: 0,
+    }
+  })
+
   const options = {
     includeScore: true,
     keys: [
       {
         name: "courseCode",
-        weight: 100,
+        weight: 10,
       },
       {
         name: "title",
@@ -40,20 +49,26 @@
 
   const fuse = new Fuse(coursesSearchable, options);
 
-  const courseResults = computed(() => fuse.search(query.value));
+  function search() {
+    if (query.value === '') {
+      return allCourseResults;
+    } else {
+      return fuse.search(query.value);
+    }
+  }
+
+  const courseResults = computed(search);
 </script>
 
 <template>
   <input v-model="query" placeholder="Search for courses..." />
 
-  <div v-if="query != ''" class="search-results">
-    <Result
-      v-for="courseResult in courseResults"
-      :crn="courseResult.item.crn"
-      :score="courseResult.score"
-      :key="courseResult.item.crn"
-    />
-  </div>
+  <Result
+    v-for="courseResult in courseResults"
+    :crn="courseResult.item.crn"
+    :score="courseResult.score"
+    :key="courseResult.item.crn"
+  />
 </template>
 
 <style scoped>
