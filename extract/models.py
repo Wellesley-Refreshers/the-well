@@ -17,12 +17,12 @@ class DayOfWeek(StrEnum):
 
 
 class MeetingTime(Model):
-    day_of_week: DayOfWeek
+    days_of_week: list[DayOfWeek]
     start: time
     end: time
 
 
-class Meeting(Model):
+class Session(Model):
     meeting_time: MeetingTime
     location: str
 
@@ -44,7 +44,7 @@ class CourseSection(Course):
     section_no: str
 
     professors: list[str]
-    meetings: list[Meeting]
+    sessions: list[Session]
 
     crosslisted: str
 

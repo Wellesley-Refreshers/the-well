@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from bs4 import BeautifulSoup
-from models import CourseSection, Meeting, MeetingTime
+from models import CourseSection, MeetingTime, Session
 
 
 def find(f: Callable, lst: list[Any]) -> Any | None:
@@ -150,7 +150,7 @@ def parse_enrollment_data(course_container: BeautifulSoup) -> tuple[int, float, 
     return int(d[0]), float(d[1]), int(d[2]), int(d[3]), int(d[4])
 
 
-def parse_meetings(course_container: BeautifulSoup) -> list[Meeting]:
+def parse_sessions(course_container: BeautifulSoup) -> list[Session]:
     """
     Given the course container of a course in the Course Browser, return
     a list of the weekly meeting times.
@@ -159,11 +159,11 @@ def parse_meetings(course_container: BeautifulSoup) -> list[Meeting]:
         course_container (BeautifulSoup): The course's containing <div>
 
     Returns:
-        list[Meeting]: The course section's meeting times.
+        list[Session]: The course section's sessions.
     """
     meeting_element = course_container.select(".coursedetail01")[1]
 
-    def parse_meeting_times(meeting_time_str: str) -> list[MeetingTime]:
+    def parse_meeting_time(session_str: str) -> MeetingTime:
         """
         Helper function to parse a list of meeting times from a string.
         The string should be of the form:
@@ -173,18 +173,18 @@ def parse_meetings(course_container: BeautifulSoup) -> list[Meeting]:
         Whitespace and semicologns before or after the string will be ignored.
 
         Args:
-            meeting_time_str (str): The meeting time string.
+            session_str (str): The meeting time string.
 
         Returns:
-            list[MeetingTime]: A list of meeting times specified by the string.
+            MeetingTime: The meeting time specified by the string.
         """
-        meeting_time_str = meeting_time_str.strip(" ;\n\t\r")
+        session_str = session_str.strip(" ;\n\t\r")
 
         day_of_week_regex = r"[MTWRF]+"
         time_regex = r"\d+:\d+ [AP]M"
         regex = rf"({day_of_week_regex}) - ({time_regex}) - ({time_regex})"
 
-        match = re.search(regex, meeting_time_str)
+        match = re.search(regex, session_str)
 
         def get_time(time_match) -> time:
             time_format = "%I:%M %p"
@@ -194,10 +194,7 @@ def parse_meetings(course_container: BeautifulSoup) -> list[Meeting]:
 
         days_of_week = match.group(1)
 
-        return [
-            MeetingTime(day_of_week=day_of_week, start=start, end=end)
-            for day_of_week in days_of_week
-        ]
+        return MeetingTime(days_of_week=list(days_of_week), start=start, end=end)
 
     def parse_location(location_element: BeautifulSoup) -> str:
         """
@@ -232,13 +229,10 @@ def parse_meetings(course_container: BeautifulSoup) -> list[Meeting]:
         time_content = contents[time_content_index]
         loc_content = contents[location_content_index]
 
-        meeting_times = parse_meeting_times(time_content)
+        meeting_time = parse_meeting_time(time_content)
         location = parse_location(loc_content)
 
-        meetings = [
-            Meeting(meeting_time=meeting_time, location=location) for meeting_time in meeting_times
-        ]
-        all_class_meetings.extend(meetings)
+        all_class_meetings.append(Session(meeting_time=meeting_time, location=location))
 
         # REMINDER: we're scanning the list in pairs.
         # TODO: could be done more pythonically by reshaping the list first.
@@ -365,7 +359,7 @@ def parse_course_section(course_container: BeautifulSoup) -> CourseSection:
         title=parse_title(course_container),
         description=parse_description(course_container),
         professors=parse_professors(course_container),
-        meetings=parse_meetings(course_container),
+        sessions=parse_sessions(course_container),
         credit=credit,
         distributions=parse_distributions(course_container),
         prerequisites=parse_prerequisites(course_container),

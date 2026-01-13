@@ -64,14 +64,16 @@ const getAllSessions = (crnColors) => {
 
   for (const crn of Object.keys(crnColors)) {
     const section = allCourseSections[crn];
-    for (const meeting of section.meetings) {
-      const meetingTime = meeting.meeting_time;
-      allSessions.push({
-        crn: crn,
-        dayOfWeek: meetingTime.day_of_week,
-        start: getRelativeMinutes(meetingTime.start),
-        end: getRelativeMinutes(meetingTime.end),
-      });
+    for (const session of section.sessions) {
+      const meetingTime = session.meeting_time;
+      for (const dayOfWeek of meetingTime.days_of_week) {
+        allSessions.push({
+          crn: crn,
+          dayOfWeek: dayOfWeek,
+          start: getRelativeMinutes(meetingTime.start),
+          end: getRelativeMinutes(meetingTime.end),
+        });
+      }
     }
   }
 
