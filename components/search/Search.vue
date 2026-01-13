@@ -72,5 +72,12 @@
 </template>
 
 <style scoped>
+  input {
+    background-color: var(--background-color-lighter);
+    border-radius: 3em;
+    padding: .5em 1em;
+    margin: .5em 0em;
 
+    width: 100%;
+  }
 </style>

@@ -4,10 +4,13 @@
   --tertiary-color: #DA1212;
 
   --background-color: #EEEEEE;
-  --background-color-lighter: #f0f0f0;
+  --background-color-lighter: #f8f8f8;
   --background-color-darker: #e0e0e0;
 }
 
-body {
+body, html {
   background-color: var(--background-color);
+
+  margin: 0;
+  padding: 0;
 }

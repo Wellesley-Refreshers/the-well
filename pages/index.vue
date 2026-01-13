@@ -1,27 +1,40 @@
 <template>
+  <!-- <Header /> -->
+
   <div class="calendar-container">
     <Calendar />
   </div>
 
-  <ScheduleChanger />
-  
   <div class="search-container">
     <Search />
+  </div>
+
+  <div class="schedule-changer-container">
+    <ScheduleChanger />
   </div>
 </template>
 
 <style scoped>
   .calendar-container {
     position: absolute;
-    top: 5em;
-    left: 5em;
-    width: 50em;
-    height: 50em;
-    margin-bottom: 5em;
+    top: 5vh;
+    left: 5vw;
+    width: 90vw;
+    height: 90vh;
+
+    border: .25em solid var(--main-color);
+    border-radius: 3em;
   }
 
   .search-container {
     position: absolute;
-    top: 60em;
+    top: 70em;
+    width: 30em;
+  }
+
+  .schedule-changer-container {
+    position: fixed;
+    top: 5em;
+    right: 5em;
   }
 </style>

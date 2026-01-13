@@ -3,18 +3,14 @@ import { currentCrnColors, currentSessions } from '../../../composables/useSched
 
 import Session from './Session.vue';
 import HourLines from './HourLines.vue';
-import DayOfWeekHeader from './DayOfWeekHeader.vue';
 
 const selectedSectionCrn = ref("");
-
-const headerHeight = "3em";
 </script>
 
 <template>
-  <DayOfWeekHeader :height="headerHeight" />
+  <div class="calendar-core">
+    <HourLines/>
 
-  <div class="calendar-core" :style="{'height': -headerHeight}">
-    <HourLines />
     <Session
       v-for="session in currentSessions"
       :key="session.crn"
@@ -29,7 +25,8 @@ const headerHeight = "3em";
 
 <style scoped>
   .calendar-core {
-    position: relative;
-    height: 100%;
+    position: absolute;
+    width: calc(100% - 7em); /* accounts for spacing around, hour labels, etc. */
+    height: 80%;
   }
 </style>

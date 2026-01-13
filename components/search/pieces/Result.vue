@@ -29,14 +29,35 @@
 <template>
   <div class="result-container" @click="addClass(props.crn)">
     <h3 class="coursecode">{{ `${section.dept} ${section.course_no}` }} <span class="section-no">{{ section.section_no }}</span></h3>
-    <h4>{{ section.title }}</h4>
-    <h5>{{ formatSessions(section).join("; ") }}</h5>
+    <h4 class="section-title">{{ section.title }}</h4>
+    <h5 class="section-sessions">{{ formatSessions(section).join("; ") }}</h5>
   </div>
 </template>
 
 <style scoped>
+  .coursecode {
+    margin: 0;
+  }
+
+  .section-no {
+    font-weight: 400;
+  }
+
+  .section-title {
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .section-sessions {
+    margin-bottom: 0;
+  }
+
   .result-container {
-    border: 1px black solid;
+    border: 1px solid var(--main-color);
+    border-radius: 1.5em;
+    margin: .8em 0em;
+    padding: 1em;
+    width: 100%;
   }
 
   .result-container:hover {
@@ -44,7 +65,5 @@
     cursor: pointer;
   }
 
-  .section-no {
-    font-weight: 400;
-  }
+  
 </style>

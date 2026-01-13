@@ -40,7 +40,9 @@ var hourRange = dayEndHour - dayStartHour;
 
   .hour-line {
     border-top: 1px solid gray;
+    margin: 0;
     width: 100%;
+    height: 0;
   }
 
   .hour-text {
