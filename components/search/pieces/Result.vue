@@ -12,15 +12,12 @@
     return time.toLocaleTimeString();
   }
 
-  function formatSessions(section) {
-    let sessionsFormatted = [];
-    for (const session of section.sessions) {
-      const daysOfWeekFormatted = session.meeting_time.days_of_week.join("");
-      const start = session.meeting_time.start;
-      const end = session.meeting_time.end;
-      sessionsFormatted.push(`${daysOfWeekFormatted} ${formatTime(start)} - ${formatTime(end)}`);
-    }
-    return sessionsFormatted;
+  function formatSession(session) {
+    const daysOfWeekFormatted = session.meeting_time.days_of_week.join("");
+    const start = session.meeting_time.start;
+    const end = session.meeting_time.end;
+
+    return `${daysOfWeekFormatted} ${formatTime(start)} - ${formatTime(end)}`;
   }
 
   const section = allCourseSections[props.crn];
@@ -31,7 +28,10 @@
     <h3 class="coursecode">{{ `${section.dept} ${section.course_no}` }} <span class="section-no">{{ section.section_no }}</span></h3>
     <h4 class="section-title">{{ section.title }}</h4>
     <h6 class="section-professors">{{ section.professors.join(", ") }}</h6>
-    <h5 class="section-sessions">{{ formatSessions(section).join("; ") }}</h5>
+
+    <div class="section-sessions">
+      <span v-for="session of section.sessions" class="section-session">{{ formatSession(session) }}</span>
+    </div>
   </div>
 </template>
 
@@ -53,10 +53,19 @@
     font-size: .8em;
     font-style: italic;
     margin: 0;
+    margin-bottom: 1em;
   }
 
   .section-sessions {
+    display: flex;
+    gap: .5rem;
     margin-bottom: 0;
+  }
+
+  .section-session {
+    padding: .25em .5em;
+    border-radius: 1em;
+    background-color: var(--secondary-color);
   }
 
   .result-container {
@@ -64,6 +73,9 @@
     border-radius: 1.5em;
     margin: .8em 0em;
     padding: 1em;
+
+    background-color: var(--main-color);
+    color: white;
   }
 
   .result-container:hover {
