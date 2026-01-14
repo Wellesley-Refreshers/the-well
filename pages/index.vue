@@ -2,12 +2,12 @@
   <Header/>
 
   <div class="main-container">
-    <div class="search-container">
-      <Search />
-    </div>
-    
     <div class="calendar-container">
       <Calendar />
+    </div>
+
+    <div class="search-container">
+      <Search />
     </div>
   </div>
 </template>
@@ -15,6 +15,9 @@
 <style scoped>
   .main-container {
     display: flex;
+    flex-flow: row-reverse;
+    flex-wrap: wrap;
+
     height: 85vh;
     max-width: 100vw;
 
@@ -22,16 +25,13 @@
   }
 
   .calendar-container {
-    /* min-width: 50%; */
-    flex-grow: 10;
+    flex-grow: 1000;
   }
 
   .search-container {
-    /* min-width: 20%; */
-    width: 20%;
+    min-width: 20rem;
+    width: 25%;
     height: 100%;
     flex-grow: 1;
-    /* border: .5rem solid var(--main-color);
-    border-radius: 2rem; */
   }
 </style>
