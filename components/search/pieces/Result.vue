@@ -53,11 +53,10 @@
   }
 
   .result-container {
-    border: 1px solid var(--main-color);
+    border: var(--border-style);
     border-radius: 1.5em;
     margin: .8em 0em;
     padding: 1em;
-    width: 100%;
   }
 
   .result-container:hover {
