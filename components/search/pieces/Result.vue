@@ -30,6 +30,7 @@
   <div class="result-container" @click="addClass(props.crn)">
     <h3 class="coursecode">{{ `${section.dept} ${section.course_no}` }} <span class="section-no">{{ section.section_no }}</span></h3>
     <h4 class="section-title">{{ section.title }}</h4>
+    <h6 class="section-professors">{{ section.professors.join(", ") }}</h6>
     <h5 class="section-sessions">{{ formatSessions(section).join("; ") }}</h5>
   </div>
 </template>
@@ -48,6 +49,12 @@
     margin: 0;
   }
 
+  .section-professors {
+    font-size: .8em;
+    font-style: italic;
+    margin: 0;
+  }
+
   .section-sessions {
     margin-bottom: 0;
   }
@@ -63,6 +70,4 @@
     background-color: var(--background-color-darker);
     cursor: pointer;
   }
-
-  
 </style>
