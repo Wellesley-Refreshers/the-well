@@ -6,12 +6,11 @@ const isInitialized = ref(false);
 // Saved in local storage
 export const currentScheduleIndex = ref(0);
 export const schedules = ref([]);
-export const currentScheduleName = computed(
-  () => schedules.value[currentScheduleIndex.value].name
+const currentSchedule = computed(
+  () => schedules.value[currentScheduleIndex.value]
 );
-export const currentCrnColors = computed(
-  () => schedules.value[currentScheduleIndex.value].crnColors
-);
+export const currentScheduleName = computed(() => currentSchedule.value.name);
+export const currentCrnColors = computed(() => currentSchedule.value.crnColors);
 export const currentSessions = computed(() =>
   getAllSessions(currentCrnColors.value)
 );
@@ -111,16 +110,8 @@ export const makeNewSchedule = () => {
   switchToSchedule(schedules.value.length - 1);
 };
 
-export const renameSchedule = (scheduleName, newName) => {
-  if (newName in Object.keys(schedules.value)) {
-    alert(`${newName} is already a schedule!`);
-    return;
-  }
-
-  if (scheduleName in Object.keys(schedules.value)) {
-    schedules.value[newName] = scheduleName.value[scheduleName];
-    delete schedules.value[scheduleName];
-  }
+export const renameSchedule = (newName) => {
+  currentSchedule.value.name = newName;
 
   saveSchedules();
 };
@@ -132,7 +123,10 @@ export const removeSchedule = () => {
   }
 
   schedules.value.splice(currentScheduleIndex.value, 1);
-  currentScheduleIndex.value -= 1; // NOTE: we've already insured index > 0
+
+  if (currentScheduleIndex.value > 0) {
+    currentScheduleIndex.value -= 1;
+  }
 
   saveCurrentScheduleIndex();
   saveSchedules();

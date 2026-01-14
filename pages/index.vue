@@ -1,9 +1,15 @@
 <template>
   <Header/>
 
-  <div class="main-container">
-    <div class="calendar-container">
-      <Calendar />
+  <div class="all-container">
+    <div class="main-container">
+      <div class="schedule-select-container">
+        <ScheduleChanger/>
+      </div>
+
+      <div class="calendar-container">
+        <Calendar />
+      </div>
     </div>
 
     <div class="search-container">
@@ -13,7 +19,7 @@
 </template>
 
 <style scoped>
-  .main-container {
+  .all-container {
     display: flex;
     flex-flow: row-reverse;
     flex-wrap: wrap;
@@ -24,8 +30,13 @@
     padding: 1em;
   }
 
-  .calendar-container {
+  .main-container {
     flex-grow: 1000;
+  }
+
+  .schedule-select-container {
+    display: flex;
+    flex-direction: row-reverse;
   }
 
   .search-container {
