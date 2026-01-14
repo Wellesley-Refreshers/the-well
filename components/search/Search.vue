@@ -61,12 +61,12 @@
 </script>
 
 <template>
-  <div class="search-container">
+  <div class="search">
     <div class="search-box-container">
       <input v-model="query" placeholder="Search for courses..." />
     </div>
 
-    <div class="search-result-container">
+    <div class="search-results-container">
       <Result
         v-for="courseResult in courseResults"
         :key="courseResult.item.crn"
@@ -78,15 +78,14 @@
 </template>
 
 <style scoped>
-  .search-container {
+  .search {
     --border-style: .25rem solid var(--main-color);
 
-    border: .5rem solid var(--main-color);
-    border-radius: 2rem;
     padding: 1em;
 
-    width: 100%;
-    height: 50rem;
+    /* width: 100%;
+    height: 50rem; */
+    height: 100%;
 
     display: flex;
     flex-direction: column;
@@ -95,10 +94,12 @@
   .search-box-container {
     display: flex;
     justify-content: space-between;
+    max-width: 100%;
   }
 
-  .search-result-container {
+  .search-results-container {
     overflow-y: auto;
+    width: 100%;
   }
 
   input {
@@ -107,6 +108,8 @@
     border-radius: 3em;
     padding: .5em 1em;
     margin: .5em 0em;
+
+    width: 100%;
 
     flex-grow: 2;
   }

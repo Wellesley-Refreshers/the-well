@@ -2,44 +2,36 @@
   <Header/>
 
   <div class="main-container">
-    <div class="calendar-container">
-      <Calendar />
-    </div>
-    
     <div class="search-container">
       <Search />
     </div>
-
-    <div class="schedule-changer-container">
-      <ScheduleChanger />
+    
+    <div class="calendar-container">
+      <Calendar />
     </div>
   </div>
-
-  
 </template>
 
 <style scoped>
   .main-container {
-    padding-top: 1em;
+    display: flex;
+    height: 85vh;
+    max-width: 100vw;
+
+    padding: 1em;
   }
 
   .calendar-container {
-    /* position: absolute; */
-    top: 5vh;
-    left: 5vw;
-    width: 90%;
-    height: 80%;
+    /* min-width: 50%; */
+    flex-grow: 10;
   }
 
   .search-container {
-    position: absolute;
-    top: 70em;
-    width: 30em;
-  }
-
-  .schedule-changer-container {
-    position: fixed;
-    top: 5em;
-    right: 5em;
+    /* min-width: 20%; */
+    width: 20%;
+    height: 100%;
+    flex-grow: 1;
+    /* border: .5rem solid var(--main-color);
+    border-radius: 2rem; */
   }
 </style>

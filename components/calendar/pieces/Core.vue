@@ -36,10 +36,7 @@ const selectedCrn = ref("");
     gap: 2em 0;
 
     height: 100%;
-    width: 100%;
 
-    border: .25em solid var(--main-color);
-    border-radius: 2em;
     padding: 1em 1em 2em 1em;
   }
 </style>

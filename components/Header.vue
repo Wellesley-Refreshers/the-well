@@ -1,7 +1,17 @@
 <template>
   <header>
     <div class="header-grid">
-      <h1 class="title">⛲ The Well</h1>
+      <div class="header-schedule">
+        <ScheduleChanger/>
+      </div>
+
+      <div class="header-title">
+        <h1 class="title">The Well</h1>
+      </div>
+
+      <div class="header-darkmode">
+
+      </div>
     </div>
   </header>
 </template>
@@ -18,11 +28,17 @@
   }
 
   .header-grid {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 10fr 1fr;
 
     height: 100%;
+  }
+
+  .header-title {
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
   }
 
   .title {
@@ -30,7 +46,7 @@
     text-align: center;
     font-size: 3em;
     font-family: var(--display-font);
-    /* margin: 0; */
+    margin: 0;
     color: white;
   }
 </style>
