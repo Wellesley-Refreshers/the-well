@@ -6,6 +6,9 @@
   --background-color: #EEEEEE;
   --background-color-lighter: #f8f8f8;
   --background-color-darker: #e0e0e0;
+
+  --display-font: "Gravitas One";
+  --readable-font: "Oswald";
 }
 
 body, html {
@@ -13,4 +16,10 @@ body, html {
 
   margin: 0;
   padding: 0;
+
+  font-family: var(--readable-font);
+}
+
+header, h1, h2 {
+  font-family: var(--display-font);
 }
