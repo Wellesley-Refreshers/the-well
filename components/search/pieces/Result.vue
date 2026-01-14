@@ -79,7 +79,7 @@
   }
 
   .result-container:hover {
-    background-color: var(--background-color-darker);
+    opacity: 95%;
     cursor: pointer;
   }
 </style>
