@@ -16,7 +16,7 @@
     }
   })
 
-  // constant for all courses as Fuse results, when query == "".
+  // constant, dummy results for all courses as Fuse results, when query == "".
   const allCourseResults = coursesSearchable.map((courseSearchable, index) => {
     return {
       item: courseSearchable,
@@ -61,23 +61,53 @@
 </script>
 
 <template>
-  <input v-model="query" placeholder="Search for courses..." />
+  <div class="search-container">
+    <div class="search-box-container">
+      <input v-model="query" placeholder="Search for courses..." />
+    </div>
 
-  <Result
-    v-for="courseResult in courseResults"
-    :crn="courseResult.item.crn"
-    :score="courseResult.score"
-    :key="courseResult.item.crn"
-  />
+    <div class="search-result-container">
+      <Result
+        v-for="courseResult in courseResults"
+        :key="courseResult.item.crn"
+        :crn="courseResult.item.crn"
+        :score="courseResult.score"
+      />
+    </div>
+  </div>
 </template>
 
 <style scoped>
+  .search-container {
+    --border-style: .25rem solid var(--main-color);
+
+    border: .5rem solid var(--main-color);
+    border-radius: 2rem;
+    padding: 1em;
+
+    width: 100%;
+    height: 50rem;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  .search-box-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .search-result-container {
+    overflow-y: auto;
+  }
+
   input {
     background-color: var(--background-color-lighter);
+    border: var(--border-style);
     border-radius: 3em;
     padding: .5em 1em;
     margin: .5em 0em;
 
-    width: 100%;
+    flex-grow: 2;
   }
 </style>
