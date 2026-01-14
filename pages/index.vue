@@ -4,7 +4,7 @@
   <div class="calendar-container">
     <Calendar />
   </div>
-
+  
   <div class="search-container">
     <Search />
   </div>
@@ -19,11 +19,8 @@
     position: absolute;
     top: 5vh;
     left: 5vw;
-    width: 90vw;
-    height: 90vh;
-
-    border: .25em solid var(--main-color);
-    border-radius: 3em;
+    width: 90%;
+    height: 90%;
   }
 
   .search-container {

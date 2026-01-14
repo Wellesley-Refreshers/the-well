@@ -1,32 +1,45 @@
 <script setup>
-import { currentCrnColors, currentSessions } from '../../../composables/useSchedules';
+import DayHeader from './DayHeader.vue';
+import DayColumn from './DayColumn.vue';
 
-import Session from './Session.vue';
-import HourLines from './HourLines.vue';
+const daysOfWeek = ["M", "T", "W", "R", "F"];
 
-const selectedSectionCrn = ref("");
+const selectedCrn = ref("");
 </script>
 
 <template>
   <div class="calendar-core">
-    <HourLines/>
+    <!-- Empty corner spot -->
+    <div class="calendar-corner"></div>
 
-    <Session
-      v-for="session in currentSessions"
-      :key="session.crn"
-      :session="session"
-      :selected-section-crn="selectedSectionCrn"
-      :color="currentCrnColors[session.crn]"
-      @becomeHovered="(event) => {selectedSectionCrn = session.crn}"
-      @becomeUnhovered="(event) => {selectedSectionCrn = ''}"
+    <!-- Day of week labels -->
+    <DayHeader v-for="dayOfWeek of daysOfWeek" :dayOfWeek="dayOfWeek" />
+
+    <!-- Space for hour labels -->
+    <div></div>
+
+    <!-- Day of week columns -->
+    <DayColumn
+      v-for="dayOfWeek of daysOfWeek"
+      :dayOfWeek="dayOfWeek"
+      :selectedCrn="selectedCrn"
+      @crnHoverChange="(crn) => {selectedCrn = crn}"
     />
   </div>
 </template>
 
 <style scoped>
   .calendar-core {
-    position: absolute;
-    width: calc(100% - 7em); /* accounts for spacing around, hour labels, etc. */
-    height: 80%;
+    display: grid;
+    grid-template-columns: 4em repeat(5, 5fr);
+    grid-template-rows: 1fr 12fr;
+    gap: 2em 0;
+
+    height: 100%;
+    width: 100%;
+
+    border: .25em solid var(--main-color);
+    border-radius: 2em;
+    padding: 1em 1em 2em 1em;
   }
 </style>

@@ -9,10 +9,8 @@ import allCourseSections from "../../../data/parsed/currentCourses.json";
 const props = defineProps({
   session: Object,
   color: String,
-  selectedSectionCrn: String,
+  selectedCrn: String,
 })
-
-let dayWidth = 1 / 5;
 
 const overlappingSessions = computed(() => {
   let overlappingSessions = [];
@@ -31,25 +29,10 @@ const overlappingSessions = computed(() => {
   return overlappingSessions;
 });
 
-function offsetByDayOfWeek(dayOfWeek) {
-  switch(dayOfWeek) {
-    case "M":
-      return 0 * dayWidth;
-    case "T":
-      return 1 * dayWidth;
-    case "W":
-      return 2 * dayWidth;
-    case "R":
-      return 3 * dayWidth;
-    case "F":
-      return 4 * dayWidth;
-  }
-}
-
 let totalMinute = dayEndMinute - dayStartMinute;
 
 // how much of the total height each minute takes up
-let fracPerMinute = 1 / totalMinute;
+let percentPerMin = 100 / totalMinute;
 
 let startMinute = props.session.start - dayStartMinute;
 let endMinute = props.session.end - dayStartMinute;
@@ -62,9 +45,9 @@ let overlapShift = computed(() => {
 
 let outerStyle = computed(() => {
   return {
-    "top": `${100 * fracPerMinute * startMinute}%`,
-    "left": `${(offsetByDayOfWeek(props.session.dayOfWeek) + overlapShift.value * dayWidth) * 100}%`,
-    "width": `${(dayWidth * 100) / overlappingSessions.value.length}%`,
+    "top": `${percentPerMin * startMinute}%`,
+    "left": `${overlapShift.value * 100}%`,
+    "width": `${100 / overlappingSessions.value.length}%`,
     "height": `${(duration / totalMinute) * 100}%`
   }
 });
@@ -82,7 +65,7 @@ let course = `${section.dept} ${section.course_no} - ${section.section_no}`;
   <div class="class-block-outer" :style="outerStyle">
     <div
       class="class-block"
-      :class="{ active: props.selectedSectionCrn === props.session.crn }"
+      :class="{ active: props.selectedCrn === props.session.crn }"
       :style="innerStyle"
       @mouseover="(event) => $emit('becomeHovered', event)"
       @mouseleave="(event) => $emit('becomeUnhovered', event)"

@@ -1,6 +1,10 @@
 <script setup>
 import { dayStartHour, dayEndHour } from '../../../composables/dayLimits';
 
+const props = defineProps({
+  showHourLabels: Boolean,
+})
+
 function formatHour(hour) {
   let meridian = "m";
   if (hour < 12) {
@@ -22,7 +26,7 @@ var hourRange = dayEndHour - dayStartHour;
 <template>
   <div class="hour-lines">
     <div class="hour-line" v-for="n in hourRange + 1">
-      <div class="hour-text">
+      <div class="hour-label" v-if="showHourLabels">
         {{ formatHour(dayStartHour + n - 1) }}
       </div>
     </div>
@@ -45,11 +49,16 @@ var hourRange = dayEndHour - dayStartHour;
     height: 0;
   }
 
-  .hour-text {
+  .hour-label {
     text-align: right;
     position: relative;
     top: -.75em;
     left: -101%;
+
+    padding-right: .8em;
+
+    font-weight: 600;
+    opacity: 35%;
   }
 
 </style>

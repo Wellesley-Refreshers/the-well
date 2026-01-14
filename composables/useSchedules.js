@@ -87,7 +87,6 @@ const getAllSessions = (crnColors) => {
 const saveSchedules = () => {
   if (import.meta.client) {
     const schedulesStringified = JSON.stringify(schedules.value);
-    console.log(schedulesStringified);
     localStorage.setItem(SCHEDULES_KEY, schedulesStringified);
   }
 };
