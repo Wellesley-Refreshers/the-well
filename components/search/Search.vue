@@ -83,8 +83,6 @@
 
     padding: 1em;
 
-    /* width: 100%;
-    height: 50rem; */
     height: 100%;
 
     display: flex;

@@ -1,7 +1,8 @@
 :root {
   --main-color: #041562;
   --secondary-color: #11468F;
-  --tertiary-color: #DA1212;
+  --tertiary-color: #9e0c0c;
+  --tertiary-color-darker: #780909;
 
   --background-color: #EEEEEE;
   --background-color-lighter: #f8f8f8;
@@ -22,4 +23,25 @@ body, html {
 
 header, h1, h2 {
   font-family: var(--display-font);
+}
+
+/* Custom scrollbar. Adapted from https://ishadeed.com/article/custom-scrollbars-css/ */
+::-webkit-scrollbar {
+  width: 1em;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--background-color-darker);
+  border-radius: 100px;
+  margin-left: .5em;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--tertiary-color);
+  border-radius: 100px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--tertiary-color-darker);
+  cursor: pointer;
 }
