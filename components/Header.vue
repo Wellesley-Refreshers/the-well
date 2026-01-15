@@ -10,11 +10,9 @@
   header {
     background-color: var(--main-color);
     width: 100%;
-    height: 5em;
+    height: 100%;
     margin: 0;
   }
-
-  
 
   .header-title {
     height: 100%;
