@@ -9,8 +9,8 @@ export default defineNuxtConfig({
   ],
   googleFonts: {
     families: {
-      Oswald: true,
-      "Gravitas One": true,
+      Fascinate: true,
+      Lexend: true,
     },
   },
 })
