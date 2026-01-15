@@ -21,8 +21,7 @@
 <style scoped>
   .all-container {
     display: flex;
-    flex-flow: row-reverse;
-    flex-wrap: wrap;
+    flex-flow: row-reverse wrap;
 
     height: 85vh;
     max-width: 100vw;
@@ -31,12 +30,20 @@
   }
 
   .main-container {
+    display: flex;
+    flex-flow: column;
+    gap: 1rem;
+
     flex-grow: 1000;
   }
 
   .schedule-select-container {
     display: flex;
     flex-direction: row-reverse;
+  }
+
+  .calendar-container {
+    flex-grow: 10;
   }
 
   .search-container {
