@@ -52,7 +52,7 @@ var hourRange = dayEndHour - dayStartHour;
   .hour-label {
     text-align: right;
     position: relative;
-    top: -.75em;
+    top: -1rem;
     left: -101%;
 
     padding-right: .8em;
