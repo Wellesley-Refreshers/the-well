@@ -3,6 +3,7 @@ from time import sleep
 from typing import Callable
 
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
 COURSE_BROWSER = "https://courses.wellesley.edu"
@@ -21,8 +22,9 @@ def retry_until_success(f: Callable) -> None:
 
 
 def main() -> None:
-    with webdriver.Chrome() as driver:
-        driver = webdriver.Chrome()
+    options = Options()
+    options.headless = True
+    with webdriver.Chrome(options=options) as driver:
         driver.get(COURSE_BROWSER)
 
         elements = driver.find_elements(By.CSS_SELECTOR, value=COURSE_SELECTOR)
