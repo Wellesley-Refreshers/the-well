@@ -24,8 +24,8 @@ function toggleMenu() {
       {{ currentScheduleName }}
     </div>
 
-    <div class="dropdown-arrow">
-      <Icon name="raphael:arrowdown" />
+    <div class="dropdown-arrow-container">
+      <Icon id="dropdown-arrow" name="raphael:arrowdown" />
     </div>
 
     <div class="dropdown-menu main-menu" v-if="showMenu">
@@ -44,19 +44,19 @@ function toggleMenu() {
   }
 
   .main-button {
+    position: relative;
+
     font-size: 1.25em;
     display: flex;
-    height: 2rem;
 
     background-color: var(--background-color);
     border: .25em solid var(--main-color);
     border-radius: 1em;
     cursor: pointer;
-    padding: .5em 0;
   }
 
   .current-schedule-display {
-    padding: 0 1em;
+    margin: .5em 1em;
   }
 
   .main-menu {
@@ -72,6 +72,27 @@ function toggleMenu() {
     border: .25em solid var(--main-color);
     border-radius: .5em;
     padding: .5em;
+  }
+
+  .dropdown-arrow-container {
+    width: 2em;
+    height: 100%;
+    text-align: center;
+
+    overflow: hidden;
+
+    background-color: var(--main-color);
+
+    /* Slightly hacky way of getting the arrow section on the side to have
+    rounded corners along with its container */
+    border-radius: 0 .5em .5em 0;
+  }
+
+  #dropdown-arrow {
+    height: 100%;
+    width: 1.5em;
+
+    color: white;
   }
 
   .dropdown-option {
