@@ -46,9 +46,10 @@ function getRelativeMinutes(timeString) {
 function selectRandomColor() {
   const usedColors = Object.values(currentCrnColors.value);
 
-  const availableColors = PALETTE.filter(
-    (color) => !usedColors.includes(color)
-  );
+  const usedAllColors = usedColors.length == PALETTE.length;
+  const availableColors = usedAllColors
+    ? PALETTE
+    : PALETTE.filter((color) => !usedColors.includes(color));
 
   return availableColors[Math.floor(Math.random() * availableColors.length)];
 }
