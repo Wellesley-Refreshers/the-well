@@ -72,7 +72,7 @@ let course = `${section.dept} ${section.course_no} - ${section.section_no}`;
       @click="(event) => {removeClass(section.crn)}"
     >
       <div class="class-block-text">
-        <h3>{{ course }}</h3>
+        <h3 class="course-code">{{ course }}</h3>
       </div>
     </div>
   </div>
@@ -81,6 +81,9 @@ let course = `${section.dept} ${section.course_no} - ${section.section_no}`;
 <style scoped>
   .class-block {
     border-radius: 1em;
+    overflow: hidden;
+
+    container-type: inline-size;
   }
 
   .class-block-outer {
@@ -101,11 +104,17 @@ let course = `${section.dept} ${section.course_no} - ${section.section_no}`;
     padding: .5em;
   }
 
-  h3 {
-    font-size: 1em;
+  .course-code {
+    font-size: .7em;
     font-weight: 600;
     margin-top: 0em;
     margin-bottom: 0em;
+  }
+
+  @container (width > 100px) {
+    .course-code {
+      font-size: 1em;
+    }
   }
 
   h4 {
